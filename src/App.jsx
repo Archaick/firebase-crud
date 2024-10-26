@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "./firebaseConfig";
-import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { getDocs } from "firebase/firestore";
 
 const App = () => {
@@ -23,6 +23,12 @@ const App = () => {
     const userDoc = doc(db, 'users', id)
     const newFields = {age: age + 1}
     await updateDoc(userDoc, newFields)
+  }
+
+  // Delete user
+  const deleteUser = async (id) => {
+    const userDoc = doc(db, 'users', id)
+    await deleteDoc(userDoc)
   }
 
   useEffect(() => {
@@ -57,9 +63,10 @@ const App = () => {
       {users.map((user) => {
         return (
           <div key={user.id}>
-            <h1>Name: {user.name}</h1> <h1>Age: {user.age}</h1>{" "}
+            <h1>Name: {user.name}</h1> <h1>Age: {user.age}</h1>
             <h1>ID: {user.id}</h1>
             <button onClick={() => {updateUser(user.id, user.age)}}>Increase Age</button>
+            <button onClick={() => {deleteUser(user.id)}}>Delete User</button>
           </div>
         );
       })}
